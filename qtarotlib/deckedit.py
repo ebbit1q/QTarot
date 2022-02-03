@@ -2,7 +2,7 @@
 
 import os
 import argparse
-from PyQt4 import QtGui,QtCore
+from PyQt5 import QtGui,QtCore,QtWidgets
 from urllib.parse import urlparse
 from random import sample,random
 from pyqt_lxml_utils import LXMLModel
@@ -72,8 +72,8 @@ class QTarotDeckEdit(QtGui.QMainWindow):
 
 	def saveReading(self,filename=None):
 		if not filename:
-			filename=str(QtGui.QFileDialog.getSaveFileName(self, caption="Save Current Reading",
-				filter="Images (%s);;HTML (*.html)" %(' '.join(formats))))
+			filename=QtWidgets.QFileDialog.getSaveFileName(self, caption="Save Current Reading",
+				filter="Images (%s);;HTML (*.html)" %(' '.join(formats)))[0]
 		if filename:
 			fmt=filename.split(".",1)[-1]
 			if fmt == 'html':
@@ -81,11 +81,11 @@ class QTarotDeckEdit(QtGui.QMainWindow):
 			elif "*.{}".format(fmt) in formats:
 				self.saveReadingAsIMG(filename,fmt)
 			else:
-				QtGui.QMessageBox.critical(self, "Save Current Reading", \
+				QtWidgets.QMessageBox.critical(self, "Save Current Reading", \
 				"Invalid format ({}) specified for {}!".format(fmt,filename))
 
 	def about(self):
-		QtGui.QMessageBox.about (self, "About {}".format(APPNAME),
+		QtWidgets.QMessageBox.about (self, "About {}".format(APPNAME),
 		("<center><big><b>{0} Deck Editor {1}</b></big>"
 		"<br />{2}<br />(C) <a href=\"mailto:{3}\">{4}</a> {5}<br />"
 		"<a href=\"{6}\">{0} Homepage</a></center>")\
@@ -94,7 +94,7 @@ class QTarotDeckEdit(QtGui.QMainWindow):
 	def initUI(self):
 		self.setWindowTitle(app.applicationName())
 		#self.view = QDeckEdit(self)
-		self.view = QtGui.QTreeView(self)
+		self.view = QtWidgets.QTreeView(self)
 		blub=objectify.fromstring("""
 		<deck>
 			<author>me</author>
@@ -136,7 +136,7 @@ class QTarotDeckEdit(QtGui.QMainWindow):
 		openAction.setShortcut('Ctrl+O')
 		openAction.setStatusTip('Edit another deck definition')
 		#openAction.triggered.connect(self.pickTable)
-		#self.findChildren(QtGui.QDockWidget, QString name = QString())
+		#self.findChildren(QtWidgets.QDockWidget, QString name = QString())
 
 		'''
 		settingsAction = QtGui.QAction(QtGui.QIcon.fromTheme('preferences-other'), 'Settings', self)
@@ -196,7 +196,7 @@ def main():
 	except ValueError:
 		pass
 
-	app = QtGui.QApplication(os.sys.argv)
+	app = QtWidgets.QApplication(os.sys.argv)
 
 	app.setApplicationName(APPNAME)
 	app.setApplicationVersion(APPVERSION)

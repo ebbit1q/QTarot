@@ -1,60 +1,60 @@
-from PyQt4 import QtGui,QtCore
+from PyQt5 import QtGui,QtCore,QtWidgets
 from lxml import objectify, etree
 from .xmlobjects import TarotCard, objectify, parser
 
-class QSuitEdit(QtGui.QWidget):
+class QSuitEdit(QtWidgets.QWidget):
 	def __init__(self, parent = None, xmlobj=None):
 		super().__init__(parent)
-		layout = QtGui.QGridLayout(self)
-		layout.addWidget(QtGui.QLabel("Name:"),0,0)
-		layout.addWidget(QtGui.QLabel("Affinity:"),1,0)
-		self.nameEdit=QtGui.QLineEdit(self)
-		self.affnEdit=QtGui.QLineEdit(self)
-		self.noSuitNEdit=QtGui.QCheckBox("No suit name in card name?:",self)
+		layout = QtWidgets.QGridLayout(self)
+		layout.addWidget(QtWidgets.QLabel("Name:"),0,0)
+		layout.addWidget(QtWidgets.QLabel("Affinity:"),1,0)
+		self.nameEdit=QtWidgets.QLineEdit(self)
+		self.affnEdit=QtWidgets.QLineEdit(self)
+		self.noSuitNEdit=QtWidgets.QCheckBox("No suit name in card name?:",self)
 		layout.addWidget(self.nameEdit,0,1)
 		layout.addWidget(self.affnEdit,1,1)
 		layout.addWidget(self.noSuitNEdit,2,0,1,2)
 
-class QCardEdit(QtGui.QWidget):
+class QCardEdit(QtWidgets.QWidget):
 	def __init__(self, parent = None, xmlobj=None):
 		super().__init__(parent)
-		layout = QtGui.QGridLayout(self)
-		layout.addWidget(QtGui.QLabel("Name:"),0,0)
-		layout.addWidget(QtGui.QLabel("Number:"),1,0)
-		layout.addWidget(QtGui.QLabel("Filepath:"),2,0)
-		layout.addWidget(QtGui.QLabel("Source:"),3,0)
-		self.nameEdit=QtGui.QLineEdit()
-		self.numberEdit=QtGui.QLineEdit()
-		self.fpEdit=QtGui.QLineEdit()
-		self.srcEdit=QtGui.QLineEdit()
+		layout = QtWidgets.QGridLayout(self)
+		layout.addWidget(QtWidgets.QLabel("Name:"),0,0)
+		layout.addWidget(QtWidgets.QLabel("Number:"),1,0)
+		layout.addWidget(QtWidgets.QLabel("Filepath:"),2,0)
+		layout.addWidget(QtWidgets.QLabel("Source:"),3,0)
+		self.nameEdit=QtWidgets.QLineEdit()
+		self.numberEdit=QtWidgets.QLineEdit()
+		self.fpEdit=QtWidgets.QLineEdit()
+		self.srcEdit=QtWidgets.QLineEdit()
 		layout.addWidget(self.nameEdit,0,1)
 		layout.addWidget(self.numberEdit,1,1)
 		layout.addWidget(self.fpEdit,2,1)
 		layout.addWidget(self.srcEdit,3,1)
 
-		tabs=QtGui.QTabWidget()
-		self.nmeaningEdit=QtGui.QTextEdit()
-		self.rmeaningEdit=QtGui.QTextEdit()
+		tabs=QtWidgets.QTabWidget()
+		self.nmeaningEdit=QtWidgets.QTextEdit()
+		self.rmeaningEdit=QtWidgets.QTextEdit()
 		tabs.addTab(self.nmeaningEdit,"Normal")
 		tabs.addTab(self.rmeaningEdit,"Reversed")
 		layout.addWidget(tabs,4,0,1,2)
 
 
-class QDeckEdit(QtGui.QWidget):
+class QDeckEdit(QtWidgets.QWidget):
 	def __init__(self, parent = None, xmlobj=None):
 		super().__init__(parent)
-		layout = QtGui.QGridLayout(self)
-		layout.addWidget(QtGui.QLabel("Author:"),0,0)
-		layout.addWidget(QtGui.QLabel("Source:"),1,0)
-		self.authorEdit=QtGui.QLineEdit()
-		self.sourceEdit=QtGui.QLineEdit() 
+		layout = QtWidgets.QGridLayout(self)
+		layout.addWidget(QtWidgets.QLabel("Author:"),0,0)
+		layout.addWidget(QtWidgets.QLabel("Source:"),1,0)
+		self.authorEdit=QtWidgets.QLineEdit()
+		self.sourceEdit=QtWidgets.QLineEdit() 
 		layout.addWidget(self.authorEdit,0,1,1,2)
 		layout.addWidget(self.sourceEdit,1,1,1,2)
-		self.suitView=QtGui.QListView()
-		self.cardView=QtGui.QListView()
+		self.suitView=QtWidgets.QListView()
+		self.cardView=QtWidgets.QListView()
 		layout.addWidget(self.suitView,2,0)
 		layout.addWidget(self.cardView,2,1)
-		self.stack=QtGui.QStackedLayout()
+		self.stack=QtWidgets.QStackedLayout()
 		self.suitedit=QSuitEdit()
 		self.cardedit=QCardEdit()
 		self.stack.addWidget(self.suitedit)
@@ -68,19 +68,19 @@ class QDeckEdit(QtGui.QWidget):
 			self.xmlobj = objectify.parse('<deck />', parser=parser)
 		
 
-class QDeckBrowser(QtGui.QWidget):
+class QDeckBrowser(QtWidgets.QWidget):
 	def __init__(self, parent = None, deck_source = None):
 		super().__init__(parent)
-		layout = QtGui.QGridLayout(self)
-		self.deckPicker=QtGui.QComboBox(self)
-		self.skinPicker=QtGui.QComboBox(self)
+		layout = QtWidgets.QGridLayout(self)
+		self.deckPicker=QtWidgets.QComboBox(self)
+		self.skinPicker=QtWidgets.QComboBox(self)
 		self.deckPicker.currentIndexChanged['QString'].connect(self.populateSkins)
 		self.skinPicker.currentIndexChanged['QString'].connect(self.populatePreview)
 
-		self.previewArea=QtGui.QListView(self)
+		self.previewArea=QtWidgets.QListView(self)
 		self.previewArea.setGridSize(QtCore.QSize(128,128))
-		self.previewArea.setViewMode (QtGui.QListView.IconMode)
-		self.previewArea.setResizeMode (QtGui.QListView.Adjust)
+		self.previewArea.setViewMode (QtWidgets.QListView.IconMode)
+		self.previewArea.setResizeMode (QtWidgets.QListView.Adjust)
 		self.previewArea.setWrapping(True)
 
 		m=QtGui.QStandardItemModel(self.previewArea)
@@ -88,11 +88,11 @@ class QDeckBrowser(QtGui.QWidget):
 
 		self.previewArea.setModel(m)
 		self.previewArea.setModelColumn(1)
-		self.previewArea.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+		self.previewArea.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 		self.previewArea.setUniformItemSizes (True)
 
-		layout.addWidget(QtGui.QLabel("Deck"),0,0)
-		layout.addWidget(QtGui.QLabel("Skin"),0,1)
+		layout.addWidget(QtWidgets.QLabel("Deck"),0,0)
+		layout.addWidget(QtWidgets.QLabel("Skin"),0,1)
 		layout.addWidget(self.deckPicker,1,0)
 		layout.addWidget(self.skinPicker,1,1)
 		layout.addWidget(self.previewArea,2,0,1,2)
@@ -137,7 +137,7 @@ class QDeckBrowser(QtGui.QWidget):
 
 	deckSource = QtCore.pyqtProperty(dict, deckSource, setDeckSource)
 
-class QTarotScene(QtGui.QGraphicsScene):
+class QTarotScene(QtWidgets.QGraphicsScene):
 	def __init__(self,*args):
 		super().__init__(*args)
 		self.tableitem=self.addPixmap(QtGui.QPixmap())
@@ -148,7 +148,7 @@ class QTarotScene(QtGui.QGraphicsScene):
 		return QtCore.QPointF(xoffset,yoffset)
 	def clear(self):
 		px=self.tableitem.pixmap()
-		QtGui.QGraphicsScene.clear(self)
+		QtWidgets.QGraphicsScene.clear(self)
 		self.tableitem=self.addPixmap(px)
 	@property
 	def smallerD(self):
@@ -174,7 +174,7 @@ class QTarotScene(QtGui.QGraphicsScene):
 
 	table = QtCore.pyqtProperty("QPixmap", table, setTable)
 
-class QTarotItem(QtGui.QGraphicsPixmapItem):
+class QTarotItem(QtWidgets.QGraphicsPixmapItem):
 
 	class QTarotItemEmitter(QtCore.QObject):
 		showAllInfo=QtCore.pyqtSignal([TarotCard,'bool',objectify.ObjectifiedElement])
@@ -182,8 +182,8 @@ class QTarotItem(QtGui.QGraphicsPixmapItem):
 		clearName=QtCore.pyqtSignal([])
 
 	def __init__(self, card, pos_data, reverse, parent=None, scene=None):
-		super().__init__(parent=None, scene=None)
-		#QtGui.QGraphicsObject.__init__(self, parent)
+		super().__init__(parent=parent)
+		#QtWidgets.QGraphicsObject.__init__(self, parent)
 		self.setAcceptHoverEvents(True)
 		self.card=card
 		self.posData=pos_data
@@ -192,9 +192,9 @@ class QTarotItem(QtGui.QGraphicsPixmapItem):
 		self.emitter = QTarotItem.QTarotItemEmitter()
 
 	def itemChange (self, change, value):
-		if change == QtGui.QGraphicsItem.ItemSceneChange:
+		if change == QtWidgets.QGraphicsItem.ItemSceneChange:
 			self.refresh()
-		return QtGui.QGraphicsPixmapItem.itemChange(self, change, value)
+		return QtWidgets.QGraphicsPixmapItem.itemChange(self, change, value)
 
 	def refresh(self):
 		if None in (self.posData, self.card, self.scene()):
@@ -211,7 +211,7 @@ class QTarotItem(QtGui.QGraphicsPixmapItem):
 			px=px.scaledToHeight(shortest_dim_size)
 
 		if self.rev:
-			rm=QtGui.QMatrix()
+			rm=QtGui.QTransform()
 			rm.rotate(180)
 			px=px.transformed(rm)
 
@@ -253,21 +253,21 @@ class QTarotItem(QtGui.QGraphicsPixmapItem):
 	rev = QtCore.pyqtProperty("bool", rev, setRev)
 
 	def hoverEnterEvent(self, event):
-		QtGui.QGraphicsPixmapItem.hoverEnterEvent(self,event)
+		QtWidgets.QGraphicsPixmapItem.hoverEnterEvent(self,event)
 		self.emitter.showName.emit(self.card.fullname())
 
 	def hoverLeaveEvent(self, event):
-		QtGui.QGraphicsPixmapItem.hoverLeaveEvent(self,event)
+		QtWidgets.QGraphicsPixmapItem.hoverLeaveEvent(self,event)
 		self.emitter.clearName.emit()
 
 	#http://python.6.n6.nabble.com/GraphicsItem-QObject-Inheritance-problem-td1923392.html
-	#http://www.riverbankcomputing.co.uk/static/Docs/PyQt4/html/new_style_signals_slots.html
-	#http://www.riverbankcomputing.co.uk/static/Docs/PyQt4/html/old_style_signals_slots.html
+	#http://www.riverbankcomputing.co.uk/static/Docs/PyQt5/html/new_style_signals_slots.html
+	#http://www.riverbankcomputing.co.uk/static/Docs/PyQt5/html/old_style_signals_slots.html
 	def mouseDoubleClickEvent(self, event):
-		QtGui.QGraphicsPixmapItem.mouseDoubleClickEvent(self,event)
+		QtWidgets.QGraphicsPixmapItem.mouseDoubleClickEvent(self,event)
 		self.emitter.showAllInfo.emit(self.card, self.rev, self.posData)
 
-class ZPGraphicsView(QtGui.QGraphicsView):
+class ZPGraphicsView(QtWidgets.QGraphicsView):
 	def __init__(self, *args):
 		super().__init__(*args)
 		self.lastPanPoint=QtCore.QPoint()
@@ -318,17 +318,17 @@ class ZPGraphicsView(QtGui.QGraphicsView):
 
 	def mousePressEvent(self, event):
 		#For panning the view
-		QtGui.QGraphicsView.mousePressEvent(self,event)
+		QtWidgets.QGraphicsView.mousePressEvent(self,event)
 		self.lastPanPoint = event.pos()
 		self.setCursor(QtCore.Qt.ClosedHandCursor)
 
 	def mouseReleaseEvent(self,event):
-		QtGui.QGraphicsView.mouseReleaseEvent(self,event)
+		QtWidgets.QGraphicsView.mouseReleaseEvent(self,event)
 		self.setCursor(QtCore.Qt.OpenHandCursor)
 		self.lastPanPoint = QtCore.QPoint()
 
 	def mouseMoveEvent(self, event):
-		QtGui.QGraphicsView.mouseMoveEvent(self,event)
+		QtWidgets.QGraphicsView.mouseMoveEvent(self,event)
 		if not self.lastPanPoint.isNull():
 			#Get how much we panned
 			delta = self.mapToScene(self.lastPanPoint) - self.mapToScene(event.pos())
@@ -374,4 +374,4 @@ class ZPGraphicsView(QtGui.QGraphicsView):
 		#Get the rectangle of the visible area in scene coords
 		visibleArea = self.mapToScene(self.rect()).boundingRect()
 		self.setCenter(visibleArea.center())
-		QtGui.QGraphicsView.resizeEvent(self,event)
+		QtWidgets.QGraphicsView.resizeEvent(self,event)

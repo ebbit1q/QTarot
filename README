@@ -1,5 +1,5 @@
 Required:
-PyQt4
+PyQt5
 Python-LMXL
 
 Inspired by http://www.zyqote.com/Linux/pub/tarot/
@@ -17,3 +17,5 @@ http://stackoverflow.com/questions/7451183/how-to-create-image-file-from-qgraphi
 http://www.qtcentre.org/wiki/index.php?title=QGraphicsView:_Smooth_Panning_and_Zooming#Zooming
 http://thesmithfam.org/blog/2007/02/03/qt-improving-qgraphicsview-performance/
 http://kunalmaemo.blogspot.com/2010/07/rotation-and-mirroring-qgraphicsitem-in.html
+
+ported to Qt5 by ebbit1q

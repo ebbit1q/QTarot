@@ -1,4 +1,4 @@
-from PyQt4 import QtGui,QtCore
+from PyQt5 import QtGui,QtCore
 import os
 from lxml.etree import DocumentInvalid
 from collections import OrderedDict as od
@@ -18,8 +18,8 @@ class QTarotConfig:
 		#deck defs are like "decks:{deck}.xml"
 		#path for layouts is like "layouts:<layout-name>.lyt"
 
-		self.userconfdir=QtGui.QDesktopServices.storageLocation\
-		(QtGui.QDesktopServices.DataLocation).replace('//','/')
+		self.userconfdir=QtCore.QStandardPaths.writableLocation\
+		(QtCore.QStandardPaths.DataLocation).replace('//','/')
 
 		app_theme_path=DECKS
 		config_theme_path=os.path.join(self.userconfdir,"decks")
@@ -122,7 +122,7 @@ class QTarotConfig:
 		#deck_name is now deck_skin
 		self.deck_skin=self.settings.value("skin","coleman-white")
 		self.current_icon_override=self.settings.value("stIconTheme", "")
-		if self.current_icon_override > "":
+		if self.current_icon_override != "":
 			QtGui.QIcon.setThemeName(self.current_icon_override)
 		else:
 			QtGui.QIcon.setThemeName(self.sys_icotheme)

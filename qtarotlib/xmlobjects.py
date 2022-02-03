@@ -1,6 +1,6 @@
 from lxml import etree, objectify
 from os import path
-from PyQt4 import QtCore
+from PyQt5 import QtCore
 
 from . import VALIDATORS
 

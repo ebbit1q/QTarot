@@ -2,7 +2,7 @@
 
 import os
 import argparse
-from PyQt4 import QtGui,QtCore
+from PyQt5 import QtGui,QtCore,QtWidgets
 from urllib.parse import urlparse
 from random import sample,random
 
@@ -12,7 +12,7 @@ from . import APPNAME,APPVERSION,AUTHOR,DESCRIPTION,YEAR,PAGE,EMAIL
 
 #http://www.sacred-texts.com/tarot/faq.htm#US1909
 
-class QTarot(QtGui.QMainWindow):
+class QTarot(QtWidgets.QMainWindow):
 
 	def __init__(self):
 		super().__init__()
@@ -37,9 +37,9 @@ class QTarot(QtGui.QMainWindow):
 		self.scene.invalidate()
 
 	def pickTable(self):
-		filename=QtGui.QFileDialog.getOpenFileName (self, caption="Open a new file", \
-		directory=QtCore.QDir.homePath(), filter="Images (%s)" %(' '.join(formats)))
-		if filename > "":
+		filename=QtWidgets.QFileDialog.getOpenFileName (self, caption="Open a new file", \
+		directory=QtCore.QDir.homePath(), filter="Images (%s)" %(' '.join(formats)))[0]
+		if filename != "":
 			self.updateTable(fn=filename)
 
 	def saveReadingAsIMG(self,filename,fmt):
@@ -94,8 +94,8 @@ class QTarot(QtGui.QMainWindow):
 
 	def saveReading(self,filename=None):
 		if not filename:
-			filename=str(QtGui.QFileDialog.getSaveFileName(self, caption="Save Current Reading",
-				filter="Images (%s);;HTML (*.html)" %(' '.join(formats))))
+			filename=QtWidgets.QFileDialog.getSaveFileName(self, caption="Save Current Reading",
+				filter="Images (%s);;HTML (*.html)" %(' '.join(formats)))[0]
 		if filename:
 			fmt=filename.split(".",1)[-1]
 			if fmt == 'html':
@@ -103,7 +103,7 @@ class QTarot(QtGui.QMainWindow):
 			elif "*.{}".format(fmt) in formats:
 				self.saveReadingAsIMG(filename,fmt)
 			else:
-				QtGui.QMessageBox.critical(self, "Save Current Reading", \
+				QtWidgets.QMessageBox.critical(self, "Save Current Reading", \
 				"Invalid format ({}) specified for {}!".format(fmt,filename))
 
 	def newReading(self,item=None,neg=None,skin=None,
@@ -111,14 +111,14 @@ class QTarot(QtGui.QMainWindow):
 		neg=qtrcfg.negativity if neg is None else neg
 
 		if ask_for_deck:
-			deck,ok = QtGui.QInputDialog.getItem(self, "Generate new reading",
+			deck,ok = QtWidgets.QInputDialog.getItem(self, "Generate new reading",
 									"Deck definition to use:", \
 									list(qtrcfg.deck_defs.keys()), 0, False)
 			if ok and deck:
 				deck=str(deck)
 			else:
 				return
-			skin,ok = QtGui.QInputDialog.getItem(self, "Generate new reading",
+			skin,ok = QtWidgets.QInputDialog.getItem(self, "Generate new reading",
 									"Skin to use (Deck: {}):".format(deck), \
 									qtrcfg.deck_defs[deck]['skins'], 0, False)
 			if ok:
@@ -139,7 +139,7 @@ class QTarot(QtGui.QMainWindow):
 				idx = layouts.index(self.last_layout)
 			except ValueError as e:
 				idx = 0
-			item,ok = QtGui.QInputDialog.getItem(self, "Generate new reading",
+			item,ok = QtWidgets.QInputDialog.getItem(self, "Generate new reading",
 			"Layout to use:", layouts, idx, False)
 			if ok and item:
 				lay=qtrcfg.layouts[item]
@@ -157,8 +157,8 @@ class QTarot(QtGui.QMainWindow):
 		for (card,placement) in zip(draws, lay.pos[:]):
 			#rectitem=self.scene.addRect(0,0,1/lay.largetDimension()*self.scene.smallerD,\
 			#2/lay.largetDimension()*self.scene.smallerD,\
-			#pen=QtGui.QPen(QtGui.QColor("red"),2),\
-			#brush=QtGui.QBrush(QtGui.QColor("indigo")))
+			#pen=QtWidgets.QPen(QtGui.QColor("red"),2),\
+			#brush=QtWidgets.QBrush(QtGui.QColor("indigo")))
 
 			rev=(random() <= neg)
 			rectitem=self.scene.addTarot(card,placement,rev)
@@ -231,7 +231,7 @@ class QTarot(QtGui.QMainWindow):
 			return result
 
 	def cardInfo(self, card, reverse=False, posdata=None, skin=''):
-		dialog=QtGui.QDockWidget(self)
+		dialog=QtWidgets.QDockWidget(self)
 		dialog.setAttribute(QtCore.Qt.WA_DeleteOnClose,True)
 		deck_def_credits=self.generateCredits(card)
 
@@ -248,14 +248,14 @@ class QTarot(QtGui.QMainWindow):
 			else:
 				full_information=self.generateCardText(card)
 
-		textdisplay=QtGui.QTextBrowser(dialog)
+		textdisplay=QtWidgets.QTextBrowser(dialog)
 		textdisplay.setReadOnly(True)
 		textdisplay.setAcceptRichText(True)
 		textdisplay.setText(("{deck_def_credits}"
 		"{layout_credits}"
 		"{full_information}").format(**locals()))
 		textdisplay.setOpenLinks(False)
-		textdisplay.anchorClicked.connect(lambda url: QtGui.\
+		textdisplay.anchorClicked.connect(lambda url: QtWidgets.\
 						QDesktopServices.\
 						openUrl(QtCore.QUrl(url)))
 		dialog.setWindowTitle("Info on {}".format(card.fullname()))
@@ -309,7 +309,7 @@ class QTarot(QtGui.QMainWindow):
 		self.deck_skin.setCurrentIndex(idx)
 
 	def browseDecks(self):
-		dialog=QtGui.QDockWidget(self)
+		dialog=QtWidgets.QDockWidget(self)
 		dialog.setAttribute(QtCore.Qt.WA_DeleteOnClose,True)
 		dialog.setWindowTitle("Browse Decks")
 		ddb=QDeckBrowser(deck_source=qtrcfg.deck_defs)
@@ -333,37 +333,37 @@ class QTarot(QtGui.QMainWindow):
 		self.ico_theme.setText(qtrcfg.current_icon_override)
 
 	def getTableName(self):
-		text = QtGui.QFileDialog.getOpenFileName(self, caption="Save Current Reading",
-			directory=QtCore.QDir.homePath(), filter="Images ({})".format(' '.join(formats)))
-		if text > "":
+		text = QtWidgets.QFileDialog.getOpenFileName(self, caption="Save Current Reading",
+			directory=QtCore.QDir.homePath(), filter="Images ({})".format(' '.join(formats)))[0]
+		if text != "":
 			self.table.setText(text)
 		else:
 			self.table.setText(qtrcfg.table)
 
 	def settings(self):
-		self.settings_dialog=QtGui.QDialog(self)
+		self.settings_dialog=QtWidgets.QDialog(self)
 		self.settings_dialog.setWindowTitle("Settings")
-		#print QtGui.QFontDialog.getFont()
+		#print QtWidgets.QFontDialog.getFont()
 
-		label=QtGui.QLabel(("Note: These will not take effect"
+		label=QtWidgets.QLabel(("Note: These will not take effect"
 		" until you make another reading"),self.settings_dialog)
-		groupbox=QtGui.QGroupBox("Reading",self.settings_dialog)
-		groupbox2=QtGui.QGroupBox("Appearance",self.settings_dialog)
-		vbox=QtGui.QVBoxLayout(self.settings_dialog)
-		gvbox=QtGui.QGridLayout(groupbox)
-		gvbox2=QtGui.QGridLayout(groupbox2)
+		groupbox=QtWidgets.QGroupBox("Reading",self.settings_dialog)
+		groupbox2=QtWidgets.QGroupBox("Appearance",self.settings_dialog)
+		vbox=QtWidgets.QVBoxLayout(self.settings_dialog)
+		gvbox=QtWidgets.QGridLayout(groupbox)
+		gvbox2=QtWidgets.QGridLayout(groupbox2)
 
-		self.negativity=QtGui.QDoubleSpinBox(groupbox)
-		self.default_layout=QtGui.QComboBox(groupbox)
+		self.negativity=QtWidgets.QDoubleSpinBox(groupbox)
+		self.default_layout=QtWidgets.QComboBox(groupbox)
 		self.negativity.setSingleStep(0.1)
 		self.negativity.setRange(0,1)
 
-		self.deck_def=QtGui.QComboBox(groupbox2)
+		self.deck_def=QtWidgets.QComboBox(groupbox2)
 		self.deck_def.currentIndexChanged['QString'].connect(self.fillSkinsBox)
-		self.deck_skin=QtGui.QComboBox(groupbox2)
-		self.ico_theme=QtGui.QLineEdit(groupbox2)
-		self.table=QtGui.QLineEdit(groupbox2)
-		button=QtGui.QPushButton(groupbox2)
+		self.deck_skin=QtWidgets.QComboBox(groupbox2)
+		self.ico_theme=QtWidgets.QLineEdit(groupbox2)
+		self.table=QtWidgets.QLineEdit(groupbox2)
+		button=QtWidgets.QPushButton(groupbox2)
 		button.setIcon(QtGui.QIcon.fromTheme("document-open"))
 		button.clicked.connect(self.getTableName)
 		self.ico_theme.setToolTip(("You should only set this if Qt isn't"
@@ -371,25 +371,25 @@ class QTarot(QtGui.QMainWindow):
 		"Currently detected icon theme: {}\n"
 		"Settings will take effect after a restart").format(qtrcfg.sys_icotheme))
 
-		gvbox.addWidget(QtGui.QLabel("Negativity"),0,0,1,2)
+		gvbox.addWidget(QtWidgets.QLabel("Negativity"),0,0,1,2)
 		gvbox.addWidget(self.negativity,0,2,1,2)
-		gvbox.addWidget(QtGui.QLabel("Default Layout"),1,0,1,2)
+		gvbox.addWidget(QtWidgets.QLabel("Default Layout"),1,0,1,2)
 		gvbox.addWidget(self.default_layout,1,2,1,2)
-		gvbox2.addWidget(QtGui.QLabel("Deck Definitions"),0,0,1,2)
+		gvbox2.addWidget(QtWidgets.QLabel("Deck Definitions"),0,0,1,2)
 		gvbox2.addWidget(self.deck_def,0,2,1,2)
-		gvbox2.addWidget(QtGui.QLabel("Deck Skins"),2,0,1,2)
+		gvbox2.addWidget(QtWidgets.QLabel("Deck Skins"),2,0,1,2)
 		gvbox2.addWidget(self.deck_skin,2,2,1,2)
-		gvbox2.addWidget(QtGui.QLabel("Table"),3,0,1,2)
+		gvbox2.addWidget(QtWidgets.QLabel("Table"),3,0,1,2)
 		gvbox2.addWidget(self.table,3,2,1,1)
 		gvbox2.addWidget(button,3,3,1,1)
-		gvbox2.addWidget(QtGui.QLabel("Override Icon Theme"),4,0,1,2)
+		gvbox2.addWidget(QtWidgets.QLabel("Override Icon Theme"),4,0,1,2)
 		gvbox2.addWidget(self.ico_theme,4,2,1,2)
 
-		buttonbox=QtGui.QDialogButtonBox(QtCore.Qt.Horizontal)
-		resetbutton=buttonbox.addButton(QtGui.QDialogButtonBox.Reset)
-		okbutton=buttonbox.addButton(QtGui.QDialogButtonBox.Ok)
-		applybutton=buttonbox.addButton(QtGui.QDialogButtonBox.Apply)
-		cancelbutton=buttonbox.addButton(QtGui.QDialogButtonBox.Cancel)
+		buttonbox=QtWidgets.QDialogButtonBox(QtCore.Qt.Horizontal)
+		resetbutton=buttonbox.addButton(QtWidgets.QDialogButtonBox.Reset)
+		okbutton=buttonbox.addButton(QtWidgets.QDialogButtonBox.Ok)
+		applybutton=buttonbox.addButton(QtWidgets.QDialogButtonBox.Apply)
+		cancelbutton=buttonbox.addButton(QtWidgets.QDialogButtonBox.Cancel)
 
 		resetbutton.clicked.connect(self.settingsReset)
 		okbutton.clicked.connect(self.settingsWrite)
@@ -405,7 +405,7 @@ class QTarot(QtGui.QMainWindow):
 		self.settings_dialog.exec_()
 
 	def about(self):
-		QtGui.QMessageBox.about (self, "About {}".format(APPNAME),
+		QtWidgets.QMessageBox.about (self, "About {}".format(APPNAME),
 		("<center><big><b>{0} {1}</b></big>"
 		"<br />{2}<br />(C) <a href=\"mailto:{3}\">{4}</a> {5}<br />"
 		"<a href=\"{6}\">{0} Homepage</a></center>")\
@@ -420,51 +420,51 @@ class QTarot(QtGui.QMainWindow):
 		self.setCentralWidget(self.view)
 		self.setDockNestingEnabled(True)
 
-		exitAction = QtGui.QAction(QtGui.QIcon.fromTheme('application-exit'), 'Exit', self)
+		exitAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('application-exit'), 'Exit', self)
 		exitAction.setShortcut('Ctrl+Q')
 		exitAction.setStatusTip('Exit application')
 		exitAction.triggered.connect(self.close)
 
-		newLayAction = QtGui.QAction(QtGui.QIcon.fromTheme('document-new'), 'New Reading', self)
+		newLayAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-new'), 'New Reading', self)
 		newLayAction.setShortcut('Ctrl+N')
 		newLayAction.setStatusTip('Generate a new reading')
 		newLayAction.triggered.connect(self.newReading)
 
-		newChooseAction = QtGui.QAction(QtGui.QIcon.fromTheme('document-new'), 'New Reading (Choose Deck)', self)
+		newChooseAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-new'), 'New Reading (Choose Deck)', self)
 		newChooseAction.setShortcut('Ctrl+Shift+N')
 		newChooseAction.setStatusTip('Generate a new reading using a deck and skin of choice')
 		newChooseAction.triggered.connect(lambda: self.newReading(ask_for_deck=True))
 
-		reloadDataAction = QtGui.QAction(QtGui.QIcon.fromTheme('document-new'), 'Reload data', self)
+		reloadDataAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-new'), 'Reload data', self)
 		reloadDataAction.setShortcut('Ctrl+Shift+R')
 		reloadDataAction.setStatusTip('Generate a new reading using a deck and skin of choice')
 		reloadDataAction.triggered.connect(qtrcfg.refreshData)
 
-		reloadReadingAction = QtGui.QAction(QtGui.QIcon.fromTheme('document-new'), 'Reload reading', self)
+		reloadReadingAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-new'), 'Reload reading', self)
 		reloadReadingAction.setShortcut('Ctrl+R')
 		reloadReadingAction.setStatusTip('Generate a new reading using the last layout')
 		reloadReadingAction.triggered.connect(lambda: self.newReading(item=self.last_layout))
 
-		saveAction = QtGui.QAction(QtGui.QIcon.fromTheme('document-save'), 'Save', self)
+		saveAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-save'), 'Save', self)
 		saveAction.setShortcut('Ctrl+S')
 		saveAction.setStatusTip('Save')
 		saveAction.triggered.connect(self.saveReading)
 
-		openAction = QtGui.QAction(QtGui.QIcon.fromTheme('document-open'), 'Change Table', self)
+		openAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-open'), 'Change Table', self)
 		openAction.setShortcut('Ctrl+O')
 		openAction.setStatusTip('Change the table image')
 		openAction.triggered.connect(self.pickTable)
-		#self.findChildren(QtGui.QDockWidget, QString name = QString())
+		#self.findChildren(QtWidgets.QDockWidget, QString name = QString())
 
-		settingsAction = QtGui.QAction(QtGui.QIcon.fromTheme('preferences-other'), 'Settings', self)
+		settingsAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('preferences-other'), 'Settings', self)
 		settingsAction.setStatusTip('Settings')
 		settingsAction.triggered.connect(self.settings)
 
-		browsingAction = QtGui.QAction(QtGui.QIcon.fromTheme('applications-graphics'), 'Browse Decks', self)
+		browsingAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('applications-graphics'), 'Browse Decks', self)
 		browsingAction.setStatusTip('Browse all deck definitions and deck skins you have')
 		browsingAction.triggered.connect(self.browseDecks)
 
-		aboutAction=QtGui.QAction(QtGui.QIcon.fromTheme('help-about'), 'About', self)
+		aboutAction=QtWidgets.QAction(QtGui.QIcon.fromTheme('help-about'), 'About', self)
 		aboutAction.triggered.connect(self.about)
 
 		st=self.statusBar()
@@ -498,7 +498,7 @@ def main():
 	global app
 	global qtrcfg
 
-	formats=set(["*."+''.join(i).lower() for i in \
+	formats=set(["*."+''.join(bytes(i).decode()).lower() for i in \
 		QtGui.QImageWriter.supportedImageFormats()])
 
 	formats=sorted(list(formats),key=str.lower)
@@ -515,7 +515,7 @@ def main():
 	except ValueError:
 		pass
 
-	app = QtGui.QApplication(os.sys.argv)
+	app = QtWidgets.QApplication(os.sys.argv)
 
 	app.setApplicationName(APPNAME)
 	app.setApplicationVersion(APPVERSION)
