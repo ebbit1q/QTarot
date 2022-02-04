@@ -306,6 +306,8 @@ class QTarot(QtWidgets.QMainWindow):
 		self.deck_skin.clear()
 		self.deck_skin.addItems(skins_list)
 		idx=self.deck_skin.findText(qtrcfg.deck_skin)
+		if idx == -1:
+			idx = 0
 		self.deck_skin.setCurrentIndex(idx)
 
 	def browseDecks(self):
